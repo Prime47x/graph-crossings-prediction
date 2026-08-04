@@ -19,7 +19,8 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-Run the training scripts in `src/` after preparing the dataset.
+Run makeData.sh to create datasets used for the project
+Use project.ipynb to run analysis on the given datasets.
 
 ## License
-MIT (or your preferred license).
+MIT.
