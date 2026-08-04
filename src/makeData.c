@@ -119,8 +119,8 @@ int getCross(edge *e1, edge *e2){
 
     if(fabs(e1->a - e2->a) < 0.0001 && fabs(e1->b == e2->b) < 0.0001){
         if(fabs(e1->c - e2->c) < 0.0001){
-            if(d2(e1->toNode->nodePoint, e2->toNode->nodePoint) <= e1Dist + 0.0001 
-            || d2(e1->fromNode->nodePoint, e2->fromNode->nodePoint) <= e1Dist + 0.0001 ) return 2;
+            if(d2(e1->toNode->nodePoint, e2->toNode->nodePoint) < e1Dist 
+            || d2(e1->fromNode->nodePoint, e2->fromNode->nodePoint) < e1Dist ) return 2;
             else return 0; 
         }
         else return 0;
