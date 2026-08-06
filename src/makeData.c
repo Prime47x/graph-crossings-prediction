@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <float.h>
 
 
 typedef struct point{
@@ -79,7 +80,7 @@ float dInf(point *p1, point *p2){
  * than  .0001.
 */
 int pointEquals(point *p1, point *p2){
-    return dInf(p1, p2) < 0.0001;
+    return dInf(p1, p2) < FLT_EPSILON;
 }
 
 /**
@@ -117,10 +118,16 @@ int getCross(edge *e1, edge *e2){
     float e1Dist = d2(e1->toNode->nodePoint, e1->fromNode->nodePoint);
     float e2Dist = d2(e2->toNode->nodePoint, e2->fromNode->nodePoint);
 
-    if(fabs(e1->a - e2->a) < 0.0001 && fabs(e1->b == e2->b) < 0.0001){
+    if(fabs(e1->a - e2->a) < 0.0001 && fabs(e1->b - e2->b) < FLT_EPSILON){
         if(fabs(e1->c - e2->c) < 0.0001){
-            if(d2(e1->toNode->nodePoint, e2->toNode->nodePoint) < e1Dist 
-            || d2(e1->fromNode->nodePoint, e2->fromNode->nodePoint) < e1Dist ) return 2;
+            if(d2(e1->toNode->nodePoint, e2->toNode->nodePoint) <= e1Dist + FLT_EPSILON){
+                if(d2(e1->fromNode->nodePoint, e2->fromNode->nodePoint) <= 2 * (e1Dist + FLT_EPSILON)) return 2;
+                else return 0;
+            }
+            if(d2(e1->fromNode->nodePoint, e2->fromNode->nodePoint) <= e1Dist + FLT_EPSILON){
+                if(d2(e1->toNode->nodePoint, e2->toNode->nodePoint) <= 2 * (e1Dist + FLT_EPSILON)) return 2;
+                else return 0;
+            }
             else return 0; 
         }
         else return 0;
@@ -147,8 +154,8 @@ int getCross(edge *e1, edge *e2){
     int e1Endpoint = pointEquals(e1->toNode->nodePoint, intersectPoint) | pointEquals(e1->fromNode->nodePoint, intersectPoint);
     int e2Endpoint = pointEquals(e2->toNode->nodePoint, intersectPoint) | pointEquals(e2->fromNode->nodePoint, intersectPoint);
 
-    int e1Interior = d2(intersectPoint, e1->toNode->nodePoint) < e1Dist & d2(intersectPoint, e1->fromNode->nodePoint) < e1Dist;
-    int e2Interior = d2(intersectPoint, e2->toNode->nodePoint) < e2Dist & d2(intersectPoint, e2->fromNode->nodePoint) < e2Dist;
+    int e1Interior = d2(intersectPoint, e1->toNode->nodePoint) < e1Dist + FLT_EPSILON && d2(intersectPoint, e1->fromNode->nodePoint) < e1Dist + FLT_EPSILON;
+    int e2Interior = d2(intersectPoint, e2->toNode->nodePoint) < e2Dist + FLT_EPSILON && d2(intersectPoint, e2->fromNode->nodePoint) < e2Dist + FLT_EPSILON;
 
     free(intersectPoint);
 

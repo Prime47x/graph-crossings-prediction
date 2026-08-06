@@ -5,9 +5,11 @@
 # the test and training data for the ML pipeline.
 
 
-$( gcc -g makeData.c -lm -o makeData )
+$( gcc -g src/makeData.c -lm -o makeData )
 for i in {1..6};
 do
-	$( ./makeData ${i} 750 >../data/phase${i}Train )
-	$( ./makeData ${i} 250 >../data/phase${i}Test )
+	$( ./makeData ${i} 750 >data/phase${i}Train )
+	$( ./makeData ${i} 250 >data/phase${i}Test )
 done
+
+$( rm makeData )
