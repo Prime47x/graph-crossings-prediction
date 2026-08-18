@@ -171,10 +171,7 @@ The main idea is that a rectilinear cross is just solving a system of linear equ
 \[  y = \frac{c_{2} - c_{1} * \frac{a_{2}}{a_{1}}}{b_{2} - b_{1}} * \frac{a_{2}}{a_{1}}\]
 \[  x =  \frac{c_{1} - b_{1}y}{a_{1}}.\]
 
-Now, for $a_{1} = 0$, we just flip the order we solve for x and y, which will result in the code given in getCross.
-
-\subsection*{Appendix D - Why z-score fails}
-Earlier in my paper, I mentioned that I normalized my data by dividing by the maximum instead of using the z-score, and I will explain that here. If you look through my code, you will see that whenever I change a feature, I will mostly square it because that is what the data provides I do. So, if I first wanted to normalize my data and then look at the graphs, I would need a normalization metric that, when I multiply it, is the same as multiplying that data point, and for a z-score that is not the case. The reason why is that it subtracts the mean, so $z^2$ is the value minus the mean square which is not equal to the squared value minus the squared mean, and thus $z^2$ is not the value squared.  
+Now, for $a_{1} = 0$, we just flip the order we solve for x and y, which will result in the code given in getCross. 
 
 
 \printbibliography
