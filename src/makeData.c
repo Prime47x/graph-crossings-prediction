@@ -66,7 +66,7 @@ float d2(point *p1, point *p2){
 }
 
 /**
- * dInf ccalculates the dInf metric between
+ * dInf calculates the dInf metric between
  * two points in R^2.
 */
 float dInf(point *p1, point *p2){
