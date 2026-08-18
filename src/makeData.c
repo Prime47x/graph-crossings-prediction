@@ -118,8 +118,8 @@ int getCross(edge *e1, edge *e2){
     float e1Dist = d2(e1->toNode->nodePoint, e1->fromNode->nodePoint);
     float e2Dist = d2(e2->toNode->nodePoint, e2->fromNode->nodePoint);
 
-    if(fabs(e1->a - e2->a) < 0.0001 && fabs(e1->b - e2->b) < FLT_EPSILON){
-        if(fabs(e1->c - e2->c) < 0.0001){
+    if(fabs(e1->a - e2->a) < FLT_EPSILON && fabs(e1->b - e2->b) < FLT_EPSILON){
+        if(fabs(e1->c - e2->c) < FLT_EPSILON){
             if(d2(e1->toNode->nodePoint, e2->toNode->nodePoint) <= e1Dist + FLT_EPSILON){
                 if(d2(e1->fromNode->nodePoint, e2->fromNode->nodePoint) <= 2 * (e1Dist + FLT_EPSILON)) return 2;
                 else return 0;
