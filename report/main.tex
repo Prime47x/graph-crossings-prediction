@@ -23,7 +23,7 @@ Many of the major problems in graph theory today concern minimizing a graph with
     n & \text{if there is overlap between the two edges.}
 \end{cases}\]
 
-The main question of my project is: can we predict the rectilinear crossing number of a random graph given the number of edges, nodes, the maximum edge length, minimum edge length, and the closed annulus that contains the graph? We can hopefully use these features to predict the crossing number of a random graph and then use that prediction to try and create an idea to plot a set of edges to a set of points.  
+The main question of my project is: can we predict the rectilinear crossing number of a random graph given the number of edges, nodes, the maximum edge length, minimum edge length, and the closed ring that contains the graph? We can hopefully use these features to predict the crossing number of a random graph and then use that prediction to try and create an idea to plot a set of edges to a set of points.  
 
 \section*{Relevant Works}
 Now, the rectilinear crossing number of a graph has many graph theorists working on conjectures and theorems on the idea. Even the famous mathematician Paul Erdös, in the book \textit{Combinatorics, Geometry and Probability: A Tribute to Paul Erdös} which is a collection of Paul Erdös' favorite problems in mathematics that have been solved or are being worked on at the time. In one chapter, it talks about the rectilinear crossing number and also a connection to a question in probabilistic geometry. \cite{Wilf_1997}  
@@ -38,7 +38,7 @@ As you can see, most of the research on rectilinear crossing numbers has been ba
 \section*{Methods}
 My project is broken up into 7 different phases, with phase 0 being data collection and the next five phases looking at each of the features closely to see how they correlate with the crossing number of the graph and if we need to square, log, or use some other function on that value to make a linear regression or make sense of the variables.
 
-For phase 0, I first made a C file and shell file to make 1,000 different graphs for each of the other 6 phases. Also, throughout each of the other phases, I will normalize the values based on their maximum values so that when we compare them, we do not compare a $10^6$ crossing number to a $10^{-2}$. Now, why did I do this by the maximum and not the z-score will be given in Appendix D.
+For phase 0, I first made a C file and shell file to make 1,000 different graphs for each of the other 6 phases. This will be the data that we will use throughout the project so, if there is any error in the C file it will effect the outcome of our results.
 
 For the first phase, I looked at nodes and edges together, as there was no way to look at nodes without changing the number of edges at the same time. So we took the two together and made the graphs to look at how they correlated with the crossing number, and then made a linear regression using the method of least squares with sklearn's linear model library. I will then verify the regression with scoring against the test data for this phase.
 
@@ -75,7 +75,7 @@ Also, for phase 1 for nodes, I got an upper-bound correlation, which isn't too s
     \label{fig:enter-label}
 \end{figure}
 
-Now, for phase 1, as you can see from the scatter plots, we got a highly correlated linear regression between the edges and nodes with the crossing number, with an $R^2$ of $.999$ on the training data and $R^2$ of $.992$ on the testing data.
+Now, for phase 1, as you can see from the scatter plots, we got a highly correlated linear regression between the edges and nodes with the crossing number, with an $R^2$ of $.999$ on the training data and $R^2$ of $.999$ on the testing data.
 
 For phases 2 and 3, all my scatter plots given by Plots 4, 5, and 6 have shown no correlation with the data, which is also shown in relatively small $R^2$ scores that are near 0 for the training data and in the negatives for the testing data.
 
@@ -117,7 +117,7 @@ Now the fourth phase on the inner radius is different. In this phase, the plot f
     \label{fig:enter-label}
 \end{figure}
 
-Similar to phase 1, I got a linear regression for the inner radius squared to the crossing number of the graph, which got an  $R^2$ of .966 on the training data and an $R^2$ of $.965$ on the testing data. I was surprised at that because we thought it would be a little lower, looking at the variance when it is lower, but we guess it is still very well correlated.
+Similar to phase 1, I got a linear regression for the inner radius squared to the crossing number of the graph, which got an  $R^2$ of $.966$ on the training data and an $R^2$ of $.968$ on the testing data. I was surprised at that because we thought it would be a little lower, looking at the variance when it is lower, but we guess it is still very well correlated.
 
 Now for phase 5, we combined phases 3 and 4, which I am noting to show every plot, but Plot 9 shows the inner radius squared vs crossings, with the color map being the outer radius squared. The other plot that we are going to show is the outer radius squared minus the inner radius squared vs crossings in Plot 10, as we are going to add the outer radius minus the inner radius to the features for phase 6.
 
@@ -135,15 +135,15 @@ Now for phase 5, we combined phases 3 and 4, which I am noting to show every plo
     \label{fig:enter-label}
 \end{figure}
 
-For phase 5, as we can see from the plots, there is not a strong correlation but still some correlation, which is why we got an $R^2$ of .549 on the training data and $R^2$ of .521 on the testing data, meaning they are correlated but not as much as phase 1 and phase 4.
+For phase 5, as we can see from the plots, there is not a strong correlation but still some correlation, which is why we got an $R^2$ of $.509$ on the training data and $R^2$ of $.476$ on the testing data, meaning they are correlated but not as much as phase 1 and phase 4.
 
-Now for the finishing phase, we trained three different linear regression models from sklearn: LinearRegression, Ridge, and LASSO. For LinearRegression, we looked at every non-empty subset of features to find the subset of features that gave the greatest $R^2$ value, which was the subset of nodes, edges, inner radius, and outer radius with $R^2 = .987$. For Ridge, we tried to find the best $\alpha$ value that gave the maximum $R^2$, which was $\alpha = 0.1$ with $R^2 = .986$. Now for LASSO, we tried to find the best $\alpha$ value that gave the minimum mean squared error, which was $\alpha = 7.11 \times 10^{-5}$ with a mean squared error of $0.0004$.
+Now for the finishing phase, we trained three different linear regression models from sklearn: LinearRegression, Ridge, and LASSO both with and without normalizing the values. For LinearRegression, we looked at every non-empty subset of features to find the subset of features that gave the greatest $R^2$ value: for non-normalized values the subset of nodes, edges, outer radius, maximum distance, and inner - outer radius  gave the greatest $R^2$ with $.988$; and for normalized values the subset nodes, edges, inner radius, minimum distance, and ineer - outer radius gave the greatest $R^2$ with $.988$. For Ridge, we tried to find the best $\alpha$ value that gave the maximum $R^2$, which was $\alpha = 10.985$ with $R^2 = .987$ for non-normalized values and $\alpha = 2.024$ with $R^2 = .988$ for normalized values. Now for LASSO, we tried to find the best $\alpha$ value that gave the minimum mean squared error, which was $\alpha = 1.311 \times 10^{4}$ with a mean squared error of $2.248 \times 10^{8}$ for non-normalized values and $\alpha = .001$ with a mean squared error of $.012$ .
 
-For the final part, I tested each of the three trained linear models on the testing data for phase  6. For LinearRegression, I got an $R^2$ of $.988$ and a mean squared error of $.0003$; For Ridge, I got an $R^2$ of $.987$ and a mean squared error of $.0003$; And for LASSO, I got an $R^2$ of $.988$ and a mean squared error of $0.0003$.So, all three regressions did well at predicting the rectilinear crossing number that I will state all three.Let n = nodes, e = edges, r = inner radius, R = outer radius, m = minimum distance, and M = maximum distance; then
+For the final part, we tested each of the three trained linear models on the training data for phase 6 and then use the testing data to test the models. we trained both a non-normalized and a normalized verison for each regression but for simplicity we will only state the values on the normalized models. For LinearRegression, we got an $R^2$ of $.988$ and a mean squared error of $.012$ on the training data and an $R^2$ of $.993$ and a mean squared error of $.009$ on the testing data; For Ridge, we got an $R^2$ of $.988$ and a mean squared error of $.012$ on the training data and an $R^2$ of $.993$ and a mean squared error of $.009$ on the testing data; And for LASSO, we got an $R^2$ of $.988$ and a mean squared error of $.012$ on the training data and an $R^2$ of $.992$ and a mean squared error of $.009$ on the testing data.So, all three regressions did well at predicting the rectilinear crossing number that I will state all three. Let n = nodes, e = edges, r = inner radius, R = outer radius, m = minimum distance, and M = maximum distance; then
 
-\[\text{LinearRegression: } Cr(G) = 0.006n^4 + 1.029e^2 + 0.046r^2 -0.013R^2\],
-\[\text{Ridge: } Cr(G) = 0.018n^4 + 0.995e^2 +0.02r^2 -0.003R^2 +0.005m + 0.017M -0.023(R^2 - r^2)\], and
-\[\text{LASSO: } Cr(G) = 0.007n^4 + 1.026e^2 +0.029r^2 +0.002M -0.013(R^2 - r^2)\].
+\[\text{LinearRegression: } Cr(G) = .009n^4 + .987e^2 + .041r^2 + .006m + .004(R^2 - r^2)\],
+\[\text{Ridge: } Cr(G) = .011n^4 + 0.983e^2 + .04r^2 + .005R^2 + .004m - .006M - .021(R^2 - r^2)\], and
+\[\text{LASSO: } Cr(G) = .007n^4 + .986e^2 + .038r^2 + .002m - .02(R^2 - r^2)\].
 
 
 \section*{Conclusion}
@@ -151,8 +151,7 @@ Going through this project was a lot of work, especially for many features that 
 
 Now one thing I do want to look at further from my data is the inner radius feature and how they compare with the rectilinear crossing number. The inner radius, it was correlated, but I stated in the paper and the notebook that as it increases, the less variance it has, so maybe we can research further why it is. Also, just as I finish up this paper, another idea is to divide it by the outer radius to see if that is in any way correlated to the rectilinear crossing number.
 
-Overall, this project was a lot of fun but stressful, as basically, the answer was clear based on the research done on this subject, but I had some ideas I wanted to try and find an answer to those ideas. So, in the fall semester, I am taking a Graph theory course, and we have a topic on the crossing numbers of a graph, and maybe apply more knowledge later.  
-
+Overall, this project was a lot of fun but stressful, as basically, the answer was clear based on the research done on this subject, but I had some ideas I wanted to try and find an answer to those ideas.
 \section*{Appendices}
 
 \subsection*{Appendix A - makeData. c and makeData.sh}
@@ -171,8 +170,7 @@ The main idea is that a rectilinear cross is just solving a system of linear equ
 \[  y = \frac{c_{2} - c_{1} * \frac{a_{2}}{a_{1}}}{b_{2} - b_{1}} * \frac{a_{2}}{a_{1}}\]
 \[  x =  \frac{c_{1} - b_{1}y}{a_{1}}.\]
 
-Now, for $a_{1} = 0$, we just flip the order we solve for x and y, which will result in the code given in getCross. 
-
+Now, for $a_{1} = 0$, we just flip the order we solve for x and y, which will result in the code given in getCross.  
 
 \printbibliography
 
